@@ -6,8 +6,6 @@ services:
     image: python:3.9.18
     environment:
       - KAFKA_BROKER=${PROJECT_KAFKA_BROKER}
-      - KAFKA_TOPIC_EMAIL=${PROJECT_KAFKA_TOPIC_EMAIL}
-      - KAFKA_TOPIC_VALID=${PROJECT_KAFKA_TOPIC_VALID}
     working_dir: /app
     volumes:
       - ./app/python:/app
@@ -31,9 +29,6 @@ services:
     environment:
       - SPARK_MASTER=${PROJECT_SPARK_MASTER}
       - KAFKA_BROKER=${PROJECT_KAFKA_BROKER}
-      - CASSANDRA_KEYSPACE=${PROJECT_CASSANDRA_KEYSPACE}
-      - CASSANDRA_TABLE_USERS=${PROJECT_CASSANDRA_TABLE_USERS}
-      - CASSANDRA_TABLE_OTP=${PROJECT_CASSANDRA_TABLE_OTP}
     ports:
       - "8080:8080"
       - "7077:7077"

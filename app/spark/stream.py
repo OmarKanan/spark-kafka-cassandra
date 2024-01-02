@@ -5,15 +5,12 @@ from pyspark.sql.functions import *
 from cassandra.cluster import Cluster
 
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
-CASSANDRA_KEYSPACE = os.environ["CASSANDRA_KEYSPACE"]
-CASSANDRA_TABLE_USERS = os.environ["CASSANDRA_TABLE_USERS"]
-CASSANDRA_TABLE_VALID = os.environ["CASSANDRA_TABLE_VALID"]
     
 def generateOtp():
     return ''.join(str(random.randint(0, 9)) for _ in range(6))
 
 def checkOtp(email, otp):
-    cassandra = Cluster(['cassandra']).connect(CASSANDRA_KEYSPACE)
+    cassandra = Cluster(['cassandra']).connect("test")
     rows = cassandra.execute(f"select otp from users where email = '{email}'")
     if not rows:
         return False
@@ -39,8 +36,8 @@ users = spark \
     .queryName("email") \
     .outputMode("append") \
     .format("org.apache.spark.sql.cassandra") \
-    .option("keyspace", CASSANDRA_KEYSPACE) \
-    .option("table", CASSANDRA_TABLE_USERS) \
+    .option("keyspace", "test") \
+    .option("table", "users") \
     .start()
 
 valid = spark \
@@ -59,8 +56,8 @@ valid = spark \
     .queryName("valid") \
     .outputMode("append") \
     .format("org.apache.spark.sql.cassandra") \
-    .option("keyspace", CASSANDRA_KEYSPACE) \
-    .option("table", CASSANDRA_TABLE_VALID) \
+    .option("keyspace", "test") \
+    .option("table", "valid") \
     .start()
 
 users.awaitTermination()
